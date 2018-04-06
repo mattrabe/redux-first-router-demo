@@ -1,5 +1,7 @@
 export default (state = '', action = {}) =>
-  action.type === 'VIDEO' ? action.payload.slug : state
+  action.type === 'VIDEO' || action.type === 'DYNAMIC_PAGE'
+    ? action.payload.slug
+    : state
 
 // Using RFR is all about effectively making use of path segments. For good
 // SEO, slugs will become your best friend.

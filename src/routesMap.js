@@ -25,13 +25,15 @@ export default {
   VIDEO: {
     path: '/video/:slug',
     thunk: async (dispatch, getState) => {
-      // TASK FOR YOU. YES, YOU!
-      //
-      // visit a VIDEO page in the app, then refresh the page, then make
-      // this work when visited directly by copying the LIST route above and
-      // using fetchData(`/api/video/${slug}`) and by dispatching
-      // the the corresponding action type which I'll leave up to you to find
-      // in ../reducers/index.js :)
+      const { jwToken, location: { payload: { slug } } } = getState()
+
+      const video = await fetchData(`/api/video/${slug}`, jwToken)
+
+      if (!video) {
+        return dispatch({ type: NOT_FOUND })
+      }
+
+      dispatch({ type: 'VIDEO_FOUND', payload: { slug, video } })
     }
   },
   PLAY: {
@@ -49,53 +51,21 @@ export default {
   ADMIN: {
     path: '/admin', // TRY: visit this path or dispatch ADMIN
     role: 'admin' // + change jwToken to 'real' in server/index.js
+  },
+  DYNAMIC_PAGE: {
+    path: '/:slug',
+    thunk: async (dispatch, getState) => {
+      const { jwToken, location: { payload: { slug } } } = getState()
+
+      // Get page
+      const resp = await fetch(`http://api.ability-poc.localhost/wp-json/abbability/v1/page?slug=${slug}`)
+      const page = await resp.json()
+
+      if (!page) {
+        return dispatch({ type: NOT_FOUND })
+      }
+
+      dispatch({ type: 'DYNAMIC_PAGE_FOUND', payload: { slug, page } })
+    }
   }
 }
-
-// DON'T GO DOWN THERE!
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// |
-// ▼
-
-// ANSWER: videoRoute.thunk.body:
-/* HURRAY! You found the answers on the back of the cereal box!
-
-const { jwToken, location: { payload: { slug } } } = getState()
-const video = await fetchData(`/api/video/${slug}`, jwToken)
-
-if (!video) {
-  return dispatch({ type: NOT_FOUND })
-}
-
-dispatch({ type: 'VIDEO_FOUND', payload: { slug, video } })
-*/
