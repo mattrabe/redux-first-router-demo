@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 class DynamicPage extends React.Component {
   state = {
     componentClass: '',
-    pageData: {}
+    pageData: {},
+    isTransitioning: false
   }
 
   componentWillMount() {
@@ -15,45 +16,65 @@ class DynamicPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.id) {
-      // Incoming new data with no page: run leave transition
-      this.runLeaveTransition()
-    }
-    else {
+    if (nextProps.id) {
       // Incoming new page data: update state and run enter transition
       this.setState({
-        pageData: nextProps
+        incomingPageData: nextProps
       })
+    }
 
-      this.runEnterTransition()
+    if (!this.state.isTransitioning) {
+      this.changePageWithTransitions()
     }
   }
 
-  runLeaveTransition = () =>
-    new Promise(resolve => {
-      this.setState({
-        componentClass: 'fade-leave fade-leave-active'
-      })
-
-      setTimeout(() => {
-        resolve()
-      }, 500)
+  changePageWithTransitions = () => {
+    this.setState({
+      isTransitioning: true
     })
 
-  runEnterTransition = () =>
-    new Promise(resolve => {
-      this.setState({
-        componentClass: 'fade-enter fade-enter-active'
-      })
+    this.props
+      .showMask()
+      .then(() => this.props.hideMask())
+      .then(() => new Promise(resolve => {
+        this.setState({
+          componentClass: 'fade-leave fade-leave-active'
+        })
 
-      setTimeout(() => {
-        resolve()
-      }, 500)
-    }).then(() => {
-      this.setState({
-        componentClass: ''
+        setTimeout(() => {
+          resolve()
+        }, 500)
+      }))
+      .then(() => {
+        this.setState({
+          pageData: this.state.incomingPageData
+        })
+
+        return new Promise(resolve => {
+          this.setState({
+            componentClass: 'fade-enter fade-enter-active'
+          })
+
+          setTimeout(() => {
+            resolve()
+          }, 500)
+        })
       })
-    })
+      .then(() => new Promise(resolve => {
+        this.setState({
+          componentClass: ''
+        })
+
+        setTimeout(() => {
+          resolve()
+        }, 500)
+      }))
+      .then(() => {
+        this.setState({
+          isTransitioning: false
+        })
+      })
+  }
 
   render() {
     const {
