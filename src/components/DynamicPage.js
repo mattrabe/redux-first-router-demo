@@ -93,12 +93,12 @@ class DynamicPage extends React.Component {
         <h2>
           {titleStr} ({slug})
         </h2>
-        <pre>{JSON.stringify(acf)}</pre>
+
         <div className='content'>{ReactHtmlParser(contentStr)}</div>
 
         <h3>Flex panels of this page are:</h3>
 
-        <FlexPanels panels={acf.flexible_content || []} />
+        <FlexPanels panels={(acf && acf.flexible_content) || []} />
       </div>
     )
   }

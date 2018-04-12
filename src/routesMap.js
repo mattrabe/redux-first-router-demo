@@ -9,8 +9,9 @@ export default {
       const { jwToken, location: { payload: { slug } } } = getState()
 
       // Get page
-      const resp = await fetch(`http://api.ability-poc.localhost/wp-json/abbability/v1/page?slug=${slug}`)
-      const page = await resp.json()
+      const page = await fetch(`http://api.ability-poc.localhost/wp-json/abbability/v1/page?slug=${slug}`)
+        .then(resp => resp.json())
+        .catch(() => null)
 
       if (!page) {
         return dispatch({ type: NOT_FOUND })

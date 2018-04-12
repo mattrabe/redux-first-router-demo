@@ -19,10 +19,6 @@ export default createSelector(
       return !hash2[category]
     }
     if (type === 'DYNAMIC_PAGE') {
-      console.log(
-        'hash3 (will NOT update when new data comes in, not sure why... isLoading gets stuck...',
-        hash3
-      )
       return false // Should be return !hash3[slug]
     }
   }
