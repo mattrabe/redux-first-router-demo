@@ -1,13 +1,15 @@
 .menu {
   display: block;
   background-color: #fff;
+  border-bottom: solid 1px #ccc;
 }
 
 a {
-  display: block;
-  padding: 10px;
+  display: inline-block;
+  padding: 20px 10px;
+  text-decoration: none;
 }
-
-.active {
-  background-color: #ccc;
+a:hover,
+a.active {
+  background-color: #eee;
 }

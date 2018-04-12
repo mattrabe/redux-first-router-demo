@@ -58,8 +58,10 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <div className={`${styles.app}`}>
-          <Menu />
+        <Menu />
+
+        <div className={`${styles.content}`}>
+          <h1>ABB</h1>
           <Switcher showMask={this.showMask} hideMask={this.hideMask} />
         </div>
 

@@ -3,13 +3,11 @@ body {
   overflow: hidden;
 }
 
-.app {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+.content {
+  padding: 20px;
 }
 
+.headerImage {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}

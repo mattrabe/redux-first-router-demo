@@ -27,6 +27,7 @@
     "history": "^4.6.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-html-parser": "^2.0.2",
     "react-redux": "^5.0.5",
     "react-universal-component": "^2.5.0",
     "redux": "^3.7.0",

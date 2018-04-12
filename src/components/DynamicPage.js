@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import ReactHtmlParser from 'react-html-parser'
 
 class DynamicPage extends React.Component {
   state = {
@@ -36,15 +37,16 @@ class DynamicPage extends React.Component {
     this.props
       .showMask()
       .then(() => this.props.hideMask())
-      .then(() => new Promise(resolve => {
-        this.setState({
-          componentClass: 'fade-leave fade-leave-active'
-        })
+      .then(() =>
+        new Promise(resolve => {
+          this.setState({
+            componentClass: 'fade-leave fade-leave-active'
+          })
 
-        setTimeout(() => {
-          resolve()
-        }, 500)
-      }))
+          setTimeout(() => {
+            resolve()
+          }, 500)
+        }))
       .then(() => {
         this.setState({
           pageData: this.state.incomingPageData
@@ -60,15 +62,16 @@ class DynamicPage extends React.Component {
           }, 500)
         })
       })
-      .then(() => new Promise(resolve => {
-        this.setState({
-          componentClass: ''
-        })
+      .then(() =>
+        new Promise(resolve => {
+          this.setState({
+            componentClass: ''
+          })
 
-        setTimeout(() => {
-          resolve()
-        }, 500)
-      }))
+          setTimeout(() => {
+            resolve()
+          }, 500)
+        }))
       .then(() => {
         this.setState({
           isTransitioning: false
@@ -85,12 +88,11 @@ class DynamicPage extends React.Component {
 
     return (
       <div className={this.state.componentClass}>
-        <p>DynamicPage....</p>
-        <p>
-          {slug}: {titleStr}
-        </p>
+        <h2>
+          {titleStr} ({slug})
+        </h2>
         <pre>{JSON.stringify(acf)}</pre>
-        <p>{contentStr}</p>
+        <div className='content'>{ReactHtmlParser(contentStr)}</div>
       </div>
     )
   }

@@ -7,15 +7,16 @@ import styles from '../css/Menu'
 const Menu = ({ onClick, path }) => (
   <div className={styles.menu}>
     <NavLink activeClassName={styles.active} exact to='/'>
-      HOME
+      Home
     </NavLink>
-
     <NavLink activeClassName={styles.active} to='/solutions'>
       Solutions
     </NavLink>
-
     <NavLink activeClassName={styles.active} to='/about'>
       About
+    </NavLink>
+    <NavLink activeClassName={styles.active} to='/asdfasdf'>
+      404
     </NavLink>
   </div>
 )
