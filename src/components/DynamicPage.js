@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ReactHtmlParser from 'react-html-parser'
 
+import FlexPanels from './FlexPanels'
+
 class DynamicPage extends React.Component {
   state = {
     componentClass: '',
@@ -93,6 +95,10 @@ class DynamicPage extends React.Component {
         </h2>
         <pre>{JSON.stringify(acf)}</pre>
         <div className='content'>{ReactHtmlParser(contentStr)}</div>
+
+        <h3>Flex panels of this page are:</h3>
+
+        <FlexPanels panels={acf.flexible_content || []} />
       </div>
     )
   }
