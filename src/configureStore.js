@@ -8,7 +8,9 @@ import * as reducers from './reducers'
 import * as actionCreators from './actions'
 
 export default (history, preLoadedState) => {
-  const { reducer, middleware, enhancer, thunk } = connectRoutes(
+  const {
+    reducer, middleware, enhancer, thunk
+  } = connectRoutes(
     history,
     routesMap,
     options
@@ -30,7 +32,4 @@ export default (history, preLoadedState) => {
   return { store, thunk }
 }
 
-const composeEnhancers = (...args) =>
-  typeof window !== 'undefined'
-    ? composeWithDevTools({ actionCreators })(...args)
-    : compose(...args)
+const composeEnhancers = (...args) => compose(...args)

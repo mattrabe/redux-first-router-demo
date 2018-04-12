@@ -1,0 +1,13 @@
+.menu {
+  display: block;
+  background-color: #fff;
+}
+
+a {
+  display: block;
+  padding: 10px;
+}
+
+.active {
+  background-color: #ccc;
+}

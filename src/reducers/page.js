@@ -5,10 +5,6 @@ export default (state = 'HOME', action = {}) => components[action.type] || state
 const components = {
   HOME: 'Home',
   DYNAMIC_PAGE: 'DynamicPage',
-  LIST: 'List',
-  VIDEO: 'Video',
-  ADMIN: 'Admin',
-  LOGIN: 'Login',
   [NOT_FOUND]: 'NotFound'
 }
 
