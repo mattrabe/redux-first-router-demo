@@ -1,15 +1,13 @@
-import routesMap from './routesMap'
 // import jwt from 'jsonwebtoken'
+import Cookies from 'universal-cookie'
+import fetch from 'isomorphic-unfetch'
+
+import routesMap from './routesMap'
+import { Config } from '../config'
+
+const cookies = new Cookies()
 
 export const isServer = typeof window === 'undefined'
-
-export const fetchData = async (path, jwToken) =>
-  fetch(`http://localhost:3000${path}`, {
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${jwToken || ''}`
-    }
-  }).then(data => data.json())
 
 export const isAllowed = (type, state) => {
   const role = routesMap[type] && routesMap[type].role // you can put arbitrary keys in routes
@@ -33,6 +31,45 @@ const fakeUser = { roles: ['admin'] }
 const userFromState = ({ jwToken, user }) => jwToken === 'real' && fakeUser
 const jwt = {
   verify: (jwToken, secret) => jwToken === 'real' && fakeUser
+}
+
+export const getCurrentUser = async () => {
+  // Check for existing login state
+  const token = cookies.get('token')
+  const user_id = cookies.get('user_id')
+  let user = null
+  if (token && user_id) {
+    /*
+    // Indicate loading state
+    this.setState({
+      user: {
+        loading: true
+      }
+    })
+*/
+
+    user = fetch(`${Config.apiUrl}/wp-json/wp/v2/users/${user_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`
+      }
+    })
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp && resp.id) {
+          // Token worked, return user
+          return {
+            ...resp,
+            token
+          }
+        }
+        // Token did not work, return null
+        return null
+      })
+  }
+
+  return user
 }
 
 // NOTE ON COOKIES:

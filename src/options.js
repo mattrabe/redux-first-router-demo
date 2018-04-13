@@ -15,7 +15,7 @@ export default {
 
     if (type === 'LOGIN' && !isServer) {
       setTimeout(() => {
-        alert(alertMessage)
+        console.log(alertMessage)
       }, 1500)
     }
   }

@@ -246,7 +246,13 @@ class App extends React.Component {
 
         <div className={`${styles.content}`}>
           <h1>ABB</h1>
-          <Switcher showMask={this.showMask} hideMask={this.hideMask} />
+          <Switcher
+            showMask={this.showMask}
+            hideMask={this.hideMask}
+            user={this.state.user}
+            attemptLogin={this.attemptLogin}
+            logoutUser={this.logoutUser}
+          />
         </div>
 
         <div className={`mask ${this.state.maskClass}`} />

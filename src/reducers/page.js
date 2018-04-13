@@ -4,7 +4,9 @@ export default (state = 'HOME', action = {}) => components[action.type] || state
 
 const components = {
   HOME: 'Home',
+  LOGIN: 'Login',
   DYNAMIC_PAGE: 'DynamicPage',
+  DYNAMIC_PORTAL: 'DynamicPage',
   [NOT_FOUND]: 'NotFound'
 }
 

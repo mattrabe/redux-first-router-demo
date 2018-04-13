@@ -21,6 +21,17 @@ const Menu = ({ pages, posts }) => (
         </NavLink>
         ))
       : null}
+    {pages
+      ? Object.keys(pages).map(index => (
+        <NavLink
+          key={`portal-${index}`}
+          activeClassName={styles.active}
+          to={`/portal/${pages[index].slug}`}
+        >
+            P: {pages[index].title.rendered}
+        </NavLink>
+        ))
+      : null}
     {posts
       ? Object.keys(posts).map(index => (
         <NavLink
@@ -33,7 +44,10 @@ const Menu = ({ pages, posts }) => (
         ))
       : null}
     <NavLink activeClassName={styles.active} to='/asdfasdf'>
-      Dynamic 404
+      Dyn 404
+    </NavLink>
+    <NavLink activeClassName={styles.active} to='/login'>
+      Login
     </NavLink>
   </div>
 )

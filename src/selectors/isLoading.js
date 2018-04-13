@@ -21,5 +21,8 @@ export default createSelector(
     if (type === 'DYNAMIC_PAGE') {
       return false // Should be return !hash3[slug]
     }
+    if (type === 'DYNAMIC_PORTAL') {
+      return false // Should be return !hash3[slug]
+    }
   }
 )

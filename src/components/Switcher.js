@@ -15,7 +15,14 @@ const UniversalComponent = universal(({ page }) => import(`./${page}`), {
 })
 
 const Switcher = ({
-  page, direction, isLoading, showMask, hideMask
+  page,
+  direction,
+  isLoading,
+  showMask,
+  hideMask,
+  user,
+  attemptLogin,
+  logoutUser
 }) => (
   <TransitionGroup
     className={`${styles.switcher} ${direction}`}
@@ -28,6 +35,9 @@ const Switcher = ({
         isLoading={isLoading}
         showMask={showMask}
         hideMask={hideMask}
+        user={user}
+        attemptLogin={attemptLogin}
+        logoutUser={logoutUser}
       />
     </Transition>
   </TransitionGroup>
