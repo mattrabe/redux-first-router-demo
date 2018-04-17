@@ -2,108 +2,49 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ReactHtmlParser from 'react-html-parser'
 
+import { isServer } from '../utils'
 import FlexPanels from './FlexPanels'
 
-class DynamicPage extends React.Component {
-  state = {
-    componentClass: '',
-    pageData: {},
-    isTransitioning: false
+const DynamicPage = ({
+  slug, title, acf, content, componentClass
+}) => {
+  const titleStr = (content && title.rendered) || ''
+  const contentStr = (content && content.rendered) || ''
+
+  if (!content) {
+    return null
   }
 
-  componentWillMount() {
-    // Set state on initial load
-    this.setState({
-      pageData: this.props
-    })
-  }
+  return (
+    <div className={componentClass}>
+      <h2>
+        {titleStr} ({slug})
+      </h2>
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.id) {
-      // Incoming new page data: update state and run enter transition
-      this.setState({
-        incomingPageData: nextProps
-      })
-    }
+      <div className='content'>{ReactHtmlParser(contentStr)}</div>
 
-    if (!this.state.isTransitioning) {
-      this.changePageWithTransitions()
-    }
-  }
+      <h3>Flex panels of this page are:</h3>
 
-  changePageWithTransitions = () => {
-    this.setState({
-      isTransitioning: true
-    })
-
-    this.props
-      .showMask()
-      .then(() => this.props.hideMask())
-      .then(() =>
-        new Promise(resolve => {
-          this.setState({
-            componentClass: 'fade-leave fade-leave-active'
-          })
-
-          setTimeout(() => {
-            resolve()
-          }, 500)
-        }))
-      .then(() => {
-        this.setState({
-          pageData: this.state.incomingPageData
-        })
-
-        return new Promise(resolve => {
-          this.setState({
-            componentClass: 'fade-enter fade-enter-active'
-          })
-
-          setTimeout(() => {
-            resolve()
-          }, 500)
-        })
-      })
-      .then(() =>
-        new Promise(resolve => {
-          this.setState({
-            componentClass: ''
-          })
-
-          setTimeout(() => {
-            resolve()
-          }, 500)
-        }))
-      .then(() => {
-        this.setState({
-          isTransitioning: false
-        })
-      })
-  }
-
-  render() {
-    const {
-      slug, title, acf, content
-    } = this.state.pageData
-    const titleStr = (content && title.rendered) || ''
-    const contentStr = (content && content.rendered) || ''
-
-    return (
-      <div className={this.state.componentClass}>
-        <h2>
-          {titleStr} ({slug})
-        </h2>
-
-        <div className='content'>{ReactHtmlParser(contentStr)}</div>
-
-        <h3>Flex panels of this page are:</h3>
-
-        <FlexPanels panels={(acf && acf.flexible_content) || []} />
-      </div>
-    )
-  }
+      <FlexPanels panels={(acf && acf.flexible_content) || []} />
+    </div>
+  )
 }
 
-const mapState = state => state.dynamicPagesHash[state.slug] || {}
+const mapState = state => {
+  let slug = ''
+  if (isServer) {
+    slug = state.slug || ''
+  }
+  else {
+    slug = state.transition.pageSlug || ''
+  }
+
+  // Not a page change, return existing state
+  if (!slug) {
+    return state.dynamicPagesHash[state.slug]
+  }
+
+  return state.dynamicPagesHash[slug] || {}
+}
 
 export default connect(mapState)(DynamicPage)

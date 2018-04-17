@@ -22,7 +22,8 @@ const Switcher = ({
   hideMask,
   user,
   attemptLogin,
-  logoutUser
+  logoutUser,
+  componentClass
 }) => (
   <TransitionGroup
     className={`${styles.switcher} ${direction}`}
@@ -38,14 +39,15 @@ const Switcher = ({
         user={user}
         attemptLogin={attemptLogin}
         logoutUser={logoutUser}
+        componentClass={componentClass}
       />
     </Transition>
   </TransitionGroup>
 )
 
-const mapState = ({ page, direction, ...state }) => ({
-  page,
-  direction,
+const mapState = state => ({
+  page: state.page,
+  direction: state.direction,
   isLoading: isLoading(state)
 })
 

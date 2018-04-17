@@ -7,11 +7,9 @@ import webpackHotMiddleware from 'webpack-hot-middleware'
 import webpackHotServerMiddleware from 'webpack-hot-server-middleware'
 import clientConfig from '../webpack/client.dev'
 import serverConfig from '../webpack/server.dev'
-import { findVideos, findVideo } from './api'
 
 const DEV = process.env.NODE_ENV === 'development'
-const publicPath = clientConfig.output.publicPath
-const outputPath = clientConfig.output.path
+const { publicPath, path: outputPath } = clientConfig.output
 const app = express()
 
 // JWTOKEN COOKIE - in a real app obviously you set this after signup/login:
@@ -32,6 +30,7 @@ app.use((req, res, next) => {
 
 // API
 
+/*
 app.get('/api/videos/:category', async (req, res) => {
   const jwToken = req.headers.authorization.split(' ')[1]
   const data = await findVideos(req.params.category, jwToken)
@@ -43,6 +42,7 @@ app.get('/api/video/:slug', async (req, res) => {
   const data = await findVideo(req.params.slug, jwToken)
   res.json(data)
 })
+*/
 
 // UNIVERSAL HMR + STATS HANDLING GOODNESS:
 
@@ -50,14 +50,16 @@ if (DEV) {
   const multiCompiler = webpack([clientConfig, serverConfig])
   const clientCompiler = multiCompiler.compilers[0]
 
-  app.use(webpackDevMiddleware(multiCompiler, { publicPath, stats: { colors: true } }))
+  app.use(webpackDevMiddleware(multiCompiler, {
+    publicPath,
+    stats: { colors: true }
+  }))
   app.use(webpackHotMiddleware(clientCompiler))
-  app.use(
-    // keeps serverRender updated with arg: { clientStats, outputPath }
-    webpackHotServerMiddleware(multiCompiler, {
-      serverRendererOptions: { outputPath }
-    })
-  )
+
+  // keeps serverRender updated with arg: { clientStats, outputPath }
+  app.use(webpackHotServerMiddleware(multiCompiler, {
+    serverRendererOptions: { outputPath }
+  }))
 }
 else {
   const clientStats = require('../buildClient/stats.json') // eslint-disable-line import/no-unresolved

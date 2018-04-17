@@ -1,3 +1,4 @@
+/*
 export const findVideos = async (category, jwToken) => {
   await fakeDelay(1000)
   if (!jwToken) return [] // in a real app, you'd authenticate
@@ -31,7 +32,7 @@ const fpVideos = [
     by: 'Rich Hickey',
     category: 'Functional Programming',
     color: 'blue',
-    tip: `Redux-First Router does not require you to embed actual links into the page 
+    tip: `Redux-First Router does not require you to embed actual links into the page
             to get the benefit of a synced address bar. Regular actions if matched
             will change the URL. That makes it easy to apply to an existing SPA Redux
             lacking in routing/URLs!`
@@ -117,7 +118,7 @@ const dbGraphqlVideos = [
     by: 'Martijn Walraven',
     category: 'Database & GraphQL',
     color: 'orange',
-    tip: `Structure your reducers so that less actions are used to trigger the same state. 
+    tip: `Structure your reducers so that less actions are used to trigger the same state.
           Your actions will become more 'page-like'. As a result your reducers
           will need to do more "tear down" work when leaving corresponding pages. It's also
           recommended to set action types as the capitalized noun name of the page.`
@@ -129,10 +130,11 @@ const dbGraphqlVideos = [
     by: 'Sacha Greif',
     category: 'Database & GraphQL',
     color: 'orange',
-    tip: `Using a hash of slugs within one of your reducers is the recommended approach to 
+    tip: `Using a hash of slugs within one of your reducers is the recommended approach to
           maintain a normalized set of entities to get the benefits of SEO. This is as opposed
           to using IDs. Refrain from using normalizr or Apollo until your app justifies it.`
   }
 ]
 
 const allVideos = reactReduxVideos.concat(dbGraphqlVideos, fpVideos)
+*/

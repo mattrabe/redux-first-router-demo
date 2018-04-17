@@ -18,7 +18,7 @@ class LoginForm extends React.Component {
     e.preventDefault()
 
     if (this.state.username && this.state.password) {
-      return this.props.attemptLogin(this.state.username, this.state.password)
+      this.props.attemptLogin(this.state.username, this.state.password)
     }
   }
 

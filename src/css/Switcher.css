@@ -129,12 +129,12 @@
   transform: translateY(100%);
 }
 :global div.mask.slide-enter-active {
-  transform: translateY(0%);
+  transform: translateY(68px);
   transition: all 500ms;
 }
 
 :global div.mask.slide-leave {
-  transform: translateY(0%);
+  transform: translateY(68px);
 }
 :global div.mask.slide-leave-active {
   transform: translateY(-100%);

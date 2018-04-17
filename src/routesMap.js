@@ -1,13 +1,28 @@
 import { redirect, NOT_FOUND } from 'redux-first-router'
 
-import { getCurrentUser } from './utils'
+import {
+  getCurrentUser,
+  getAllPages,
+  isServer,
+  transitionPageContent
+} from './utils'
 import { Config } from '../config'
 
 export default {
-  HOME: '/',
+  HOME: {
+    path: '/',
+    thunk: async (dispatch, getState) => {
+      const user = await getCurrentUser(getState())
+
+      dispatch({ type: 'SET_CURRENT_USER', user })
+      dispatch({ type: 'SET_ALL_PAGES', allPages: await getAllPages() })
+    }
+  },
   LOGIN: {
     path: '/login',
     thunk: async (dispatch, getState) => {
+      dispatch({ type: 'SET_ALL_PAGES', allPages: await getAllPages() })
+
       dispatch({ type: 'LOGIN', payload: {} })
     }
   },
@@ -15,24 +30,53 @@ export default {
     path: '/:slug',
     thunk: async (dispatch, getState) => {
       const { location: { payload: { slug } } } = getState()
+      const user = await getCurrentUser(getState())
+      dispatch({ type: 'SET_ALL_PAGES', allPages: await getAllPages() })
 
-      // Get page
-      const page = await fetch(`${Config.apiUrl}/wp-json/abbability/v1/page?slug=${slug}`)
-        .then(resp => resp.json())
-        .catch(() => null)
+      if (slug && slug !== 'undefined') {
+        // Not sure why slug is sometimes equal to the string value 'undefined'...
+        if (!isServer) {
+          // Running on client, not server...
 
-      if (!page) {
-        return dispatch({ type: NOT_FOUND })
+          // Start transition
+          dispatch({ type: 'SET_IS_TRANSITIONING' })
+          new Promise(resolve => {
+            dispatch({ type: 'MASK_ENTER' })
+
+            setTimeout(() => {
+              resolve()
+            }, 1)
+          }).then(resp =>
+            new Promise(resolve => {
+              dispatch({ type: 'MASK_ENTER_ACTIVE' })
+
+              setTimeout(() => {
+                resolve()
+              }, 500)
+            }))
+        }
+
+        // Get page
+        const page = await fetch(`${Config.apiUrl}/wp-json/abbability/v1/page?slug=${slug}`)
+          .then(resp => resp.json())
+          .catch(() => null)
+
+        if (!page) {
+          return dispatch({ type: NOT_FOUND })
+        }
+
+        // Run transition and/or switch out page content
+        transitionPageContent(dispatch, 'DYNAMIC_PAGE_FOUND', slug, page)
       }
-
-      dispatch({ type: 'DYNAMIC_PAGE_FOUND', payload: { slug, page } })
     }
   },
   DYNAMIC_PORTAL: {
     path: '/portal/:slug',
     thunk: async (dispatch, getState) => {
       const { location: { payload: { slug } } } = getState()
-      const user = await getCurrentUser()
+      const user = await getCurrentUser(getState())
+      const allPages = await getAllPages()
+      dispatch({ type: 'SET_ALL_PAGES', allPages })
 
       const token = (user && user.token) || null
       let page = null
